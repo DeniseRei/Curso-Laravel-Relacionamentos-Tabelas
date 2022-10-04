@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\{
+    Course,
+    Module,
     User,
     Preference
 };
@@ -48,6 +50,39 @@ Route::get('/one-to-one', function () {
     //dd($user->preference()->get());
     //dd($user->preference()->first()); //Não recomendado, faz nova consulta banco
 });
+
+Route::get('/one-to-many', function () {
+    //$course = Course::create(['name'=> 'Curso laravel']);
+    $course = Course::first();
+    /*modo de acesso a classe Modulo através do relacionamento com curso*/
+
+    //$course->modules();
+
+    //$course->modules()->create($data);
+    $modules = $course->modules;
+    //dd($modules);
+    //$course->modules()->get();//como um módulo tem muitos cursos desta forma, pode demorar a consulta no bd
+    $data = ['name'=> 'modulo alteração xxx'];
+
+    if(!$course->modules){
+        $course->modules()->update($data);
+    }else{
+        $course->modules()->create($data);
+    }
+
+    $course->refresh();
+    //var_dump($course->modules);
+
+
+    $course->modules()->delete();
+    dd($course->modules);
+    $course->refresh();
+
+
+
+
+});
+
 
 Route::get('/', function () {
     return view('welcome');
