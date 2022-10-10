@@ -3,6 +3,7 @@
 use App\Models\{
     Course,
     Module,
+    Permission,
     User,
     Preference
 };
@@ -78,11 +79,41 @@ Route::get('/one-to-many', function () {
     dd($course->modules);
     $course->refresh();
 
-
-
-
 });
 
+Route::get('/many-to-many', function () {
+  //Criando permissoes
+    //dd(Permission::create(['name' => 'compras']));
+
+    //Adicionando a permissão 1 para o usuario 1
+    $user = User::with('permissions')->find(1);
+    //dd($user->permission);
+
+    //pegando a primeira permissão criada e salvando no usuario acima
+    //$permission = Permission::find(1);
+    //$user->permissions()->save($permission);
+
+    //atribuindo varias permissoes para um usuario
+    // $user->permissions()->saveMany([
+    //     Permission::find(1),
+    //     Permission::find(2),
+    //     Permission::find(3),
+    // ]);
+
+    //O usuario sincronizara apenas com a permissão 2
+    //$user->permissions()->sync([2]);
+
+    //O attach adiciona varias vezes a mesma permissão, o que é ruim,
+    //como sabe que o usuario tem a permissão 2, a possibilidade é passar a permissão que o usuario não tem
+    //$user->permissions()->attach([1,3]);
+
+    //O detach faz o contrario do attach, remove as permissoes de um id especifico
+
+    $user->permissions()->detach([1]);
+    $user->refresh();
+
+    dd($user->permissions);
+});
 
 Route::get('/', function () {
     return view('welcome');
