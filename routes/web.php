@@ -115,6 +115,19 @@ Route::get('/many-to-many', function () {
     dd($user->permissions);
 });
 
+Route::get('/many-to-many-pivot', function () {
+    $user = User::with('permissions')->find(1);
+    $user->permissions()->attach([
+      1 => ['active' => false]
+    ]);
+    $user->refresh();
+
+    foreach($user->permissions as $permission){
+        echo "{$permission->name} - {$permission->pivot->active} <br>";
+    }
+   // dd($user->permissions);
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
