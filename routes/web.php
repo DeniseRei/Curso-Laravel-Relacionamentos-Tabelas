@@ -5,7 +5,8 @@ use App\Models\{
     Module,
     Permission,
     User,
-    Preference
+    Preference,
+    Image
 };
 use Illuminate\Support\Facades\Route;
 
@@ -63,11 +64,11 @@ Route::get('/one-to-many', function () {
     $modules = $course->modules;
     //dd($modules);
     //$course->modules()->get();//como um módulo tem muitos cursos desta forma, pode demorar a consulta no bd
-    $data = ['name'=> 'modulo alteração xxx'];
+    $data = ['name' => 'modulo alteração xxx'];
 
-    if(!$course->modules){
+    if (!$course->modules) {
         $course->modules()->update($data);
-    }else{
+    } else {
         $course->modules()->create($data);
     }
 
@@ -78,11 +79,10 @@ Route::get('/one-to-many', function () {
     $course->modules()->delete();
     dd($course->modules);
     $course->refresh();
-
 });
 
 Route::get('/many-to-many', function () {
-  //Criando permissoes
+    //Criando permissoes
     //dd(Permission::create(['name' => 'compras']));
 
     //Adicionando a permissão 1 para o usuario 1
@@ -118,14 +118,30 @@ Route::get('/many-to-many', function () {
 Route::get('/many-to-many-pivot', function () {
     $user = User::with('permissions')->find(1);
     $user->permissions()->attach([
-      1 => ['active' => false]
+        1 => ['active' => false]
     ]);
     $user->refresh();
 
-    foreach($user->permissions as $permission){
+    foreach ($user->permissions as $permission) {
         echo "{$permission->name} - {$permission->pivot->active} <br>";
     }
-   // dd($user->permissions);
+    // dd($user->permissions);
+});
+
+Route::get('/one-to-one-polymorphic', function () {
+    $user = User::first();
+    $data = ['path' => 'path/nome-image.png'];
+
+    //$user->image->delete();
+
+    if ($user->image) {
+        $user->image->update($data);
+    } else {
+        $user->image()->save(new Image()); //quando utiliza o save para salvar é necessario criar a extensão, usar o new
+    }
+
+
+    dd($user->image);
 });
 
 Route::get('/', function () {
