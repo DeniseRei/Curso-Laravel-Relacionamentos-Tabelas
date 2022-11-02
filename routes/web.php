@@ -1,12 +1,13 @@
 <?php
 
 use App\Models\{
+    Comment,
     Course,
     Module,
     Permission,
     User,
     Preference,
-    Image
+    Image,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -142,6 +143,24 @@ Route::get('/one-to-one-polymorphic', function () {
 
 
     dd($user->image);
+});
+
+Route::get('/one-to-many-polimorphic', function () {
+    // $course = Course::first();
+
+    // $course->comments()->create([
+    //     'subject' => 'Novo Comentário',
+    //     'content' => 'Um comentario daora',
+    // ]);
+
+    // dd($course->comments);
+
+    //para saber de qual modelo é um determinado comentário
+
+    $comment = Comment::find(1);
+    dd($comment->commentable);
+
+
 });
 
 Route::get('/', function () {
