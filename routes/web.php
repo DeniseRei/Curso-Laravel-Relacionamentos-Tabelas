@@ -8,6 +8,7 @@ use App\Models\{
     User,
     Preference,
     Image,
+    Tag,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -90,7 +91,7 @@ Route::get('/many-to-many', function () {
     $user = User::with('permissions')->find(1);
     //dd($user->permission);
 
-    //pegando a primeira permissão criada e salvando no usuario acima
+    //salvando a primeira permissão criada e salvando no usuario acima
     //$permission = Permission::find(1);
     //$user->permissions()->save($permission);
 
@@ -163,6 +164,24 @@ Route::get('/one-to-many-polimorphic', function () {
 
 });
 
+Route::get('/many-to-many-polimorphic', function () {
+    $user = User::first();
+
+    // Tag::create(['name' => 'tag1', 'color' => 'blue']);
+    // Tag::create(['name' => 'tag2', 'color' => 'red']);
+    // Tag::create(['name' => 'tag3', 'color' => 'green']);
+
+    //$user->tags()->attach(1);
+
+    //dd($user->tags);
+    //filtro qual curso tem a tag 1
+    //$tag = Tag::find(1);
+    $tag = Tag::where('name', 'tag1')->first();
+    dd($tag->users);
+
+});
+
 Route::get('/', function () {
+
     return view('welcome');
 });
